@@ -25,10 +25,10 @@
     "safari": "npx playwright wk http://localhost:3030"
   },
   "dependencies": {
-    "be-enhanced": "0.0.24",
-    "be-hive": "0.0.98",
+    "be-enhanced": "0.0.25",
+    "be-hive": "0.0.99",
     "trans-render": "0.0.684",
-    "xtal-element": "0.0.563"
+    "xtal-element": "0.0.564"
   },
   "devDependencies": {
     "may-it-serve": "0.0.5",

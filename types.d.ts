@@ -2,12 +2,12 @@ import { ActionOnEventConfigs } from "trans-render/froop/types";
 import {IBE, Declarations} from 'be-enhanced/types';
 
 export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
-    
+    prop: string;
 }
 
 
 export interface AllProps extends EndUserProps{
-    value?: string | boolean;
+    value?: string | boolean | number;
     //ignoreValChange: boolean;
 }
 

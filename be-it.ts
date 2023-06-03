@@ -5,7 +5,32 @@ import { Actions, AllProps, AP, PAP, ProPAP } from './types';
 import { register } from 'be-hive/register.js';
 
 export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> implements Actions{
+
+    static  override get beConfig(){
+        return {
+            parse: true,
+            primaryProp: 'prop'
+        } as BEConfig
+    }
     #mutationObserver: MutationObserver | undefined;
+    #targetEl: WeakRef<Element> | undefined;
+    get #target(){
+        if(this.#targetEl !== undefined){
+            const deref = this.#targetEl.deref();
+            if(deref !== undefined) return deref;
+        }
+        const {enhancedElement} = this;
+        let {nextElementSibling} = enhancedElement;
+        while(nextElementSibling !== null){
+            const {localName} = nextElementSibling;
+            if(localName === 'meta' || localName === 'link'){
+                nextElementSibling = nextElementSibling.nextElementSibling;
+            }else{
+                return nextElementSibling;
+            }
+        }
+        return null;
+    }
     #ignoreValChange = false;
 
     get #attr(){
@@ -23,36 +48,42 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         this.#mutationObserver.observe(enhancedElement, mutOptions);
         this.calcVal();
     }
+
     calcVal(){
         const {enhancedElement} = this;
         if(!enhancedElement.hasAttribute(this.#attr)){
             this.value = undefined;
             return;
         }
-        const {localName} = enhancedElement;
-        switch(localName){
-            case 'link':{
-                const split = (enhancedElement.getAttribute(this.#attr)!).split('/');
-                const lastVal = split.at(-1);
-                this.#ignoreValChange = true;
-                switch(lastVal){
-                    case 'True':
-                        this.value = true;
-                        break;
-                    case 'False':
-                        this.value = false;
-                        break;
-                    default:
-                        this.value = lastVal;
-                }
-                
+        if(enhancedElement instanceof HTMLMetaElement){
+            const type = enhancedElement.getAttribute('itemtype');
+            const content = enhancedElement.content;
+            switch(type){
+                case 'https://schema.org/Number':
+                    this.value = Number(content);
+                    break;
+                case 'https://schema.org/Integer':
+                    this.value = parseInt(content);
+                    break;
+                case 'https://schema.org/Float':
+                    this.value = parseFloat(content);
+                    break;
+
             }
-            break;
-            case 'meta':{
-                const content = (enhancedElement as HTMLMetaElement).content;
-                
+        }else{
+            const split = (enhancedElement.href).split('/');
+            const lastVal = split.at(-1);
+            this.#ignoreValChange = true;
+            switch(lastVal){
+                case 'True':
+                    this.value = true;
+                    break;
+                case 'False':
+                    this.value = false;
+                    break;
+                default:
+                    this.value = lastVal;
             }
-            break;
         }
 
         this.resolved = true;
@@ -66,11 +97,19 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             this.#ignoreValChange = false;
             return;
         }
-        const {value, enhancedElement} = self;
+        const {value, enhancedElement, prop} = self;
         if(value === undefined) return;
-        const urlVal = value === true ? 'True' :
+        if(enhancedElement instanceof HTMLMetaElement){
+            enhancedElement.content = value.toString();
+        }else{
+            const urlVal = value === true ? 'True' :
             value === false ? 'False' : value;
-        enhancedElement.href = 'https://schema.org/' + urlVal;
+            enhancedElement.href = 'https://schema.org/' + urlVal;
+        }
+        if(prop){
+            const target = this.#target;
+            if(target !== null) (<any>target)[prop] = value;
+        }
     }
 }
 
@@ -85,6 +124,7 @@ const xe = new XE<AP, Actions>({
         tagName,
         propDefaults: {
             ...propDefaults,
+            prop: '',
         },
         propInfo: {
             ...propInfo,
