@@ -26,6 +26,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             if(localName === 'meta' || localName === 'link'){
                 nextElementSibling = nextElementSibling.nextElementSibling;
             }else{
+                this.#targetEl = new WeakRef(nextElementSibling);
                 return nextElementSibling;
             }
         }
@@ -53,6 +54,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         const {enhancedElement} = this;
         if(!enhancedElement.hasAttribute(this.#attr)){
             this.value = undefined;
+            this.resolved = true;
             return;
         }
         if(enhancedElement instanceof HTMLMetaElement){

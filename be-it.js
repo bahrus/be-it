@@ -24,6 +24,7 @@ export class BeIt extends BE {
                 nextElementSibling = nextElementSibling.nextElementSibling;
             }
             else {
+                this.#targetEl = new WeakRef(nextElementSibling);
                 return nextElementSibling;
             }
         }
@@ -49,6 +50,7 @@ export class BeIt extends BE {
         const { enhancedElement } = this;
         if (!enhancedElement.hasAttribute(this.#attr)) {
             this.value = undefined;
+            this.resolved = true;
             return;
         }
         if (enhancedElement instanceof HTMLMetaElement) {
