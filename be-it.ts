@@ -32,33 +32,42 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         }
         return null;
     }
-    #ignoreValChange = false;
+    #skipParsingAttrChange = false;
 
     get #attr(){
         return this.enhancedElement.localName === 'link' ? 'href' : 'content';
     }
-    override async attach(enhancedElement: HTMLLinkElement | HTMLMetaElement, enhancementInfo: EnhancementInfo): Promise<void> {
-        await super.attach(enhancedElement, enhancementInfo);
+
+    hydrate(self: this) {
+        const {enhancedElement} = self;
         const mutOptions: MutationObserverInit = {
-            attributeFilter: [this.#attr],
+            attributeFilter: [self.#attr],
             attributes: true
         };
-        this.#mutationObserver = new MutationObserver(() => {
-            if(this.#ignoreValChange){
-                this.#ignoreValChange = false;
+        self.#mutationObserver = new MutationObserver(() => {
+            if(self.#skipParsingAttrChange){
+                self.#skipParsingAttrChange = false;
                 return;
             }
-            this.calcVal();
+            self.calcVal(self);
         });
-        this.#mutationObserver.observe(enhancedElement, mutOptions);
-        this.calcVal();
+        self.#mutationObserver.observe(enhancedElement, mutOptions);
+        self.calcVal(self);
     }
 
-    calcVal(){
-        const {enhancedElement} = this;
+    calcVal(self: this){
+        const {enhancedElement, prop} = self;
         if(!enhancedElement.hasAttribute(this.#attr)){
-            this.value = undefined;
-            this.resolved = true;
+            //see if target element has a value
+            const target = this.#target;
+            if(target !== null){
+                this.#skipParsingAttrChange = true;
+                self.value = (<any>target)[prop!]
+            }else{
+                self.value = undefined;
+            }
+            
+            self.resolved = true;
             return;
         }
         if(enhancedElement instanceof HTMLMetaElement){
@@ -66,40 +75,39 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             const content = enhancedElement.content;
             switch(type){
                 case 'https://schema.org/Number':
-                    this.value = Number(content);
+                    self.value = Number(content);
                     break;
                 case 'https://schema.org/Integer':
-                    this.value = parseInt(content);
+                    self.value = parseInt(content);
                     break;
                 case 'https://schema.org/Float':
-                    this.value = parseFloat(content);
+                    self.value = parseFloat(content);
                     break;
 
             }
         }else{
             const split = (enhancedElement.href).split('/');
             const lastVal = split.at(-1);
-            this.#ignoreValChange = true;
+            self.#skipParsingAttrChange = true;
             switch(lastVal){
                 case 'True':
-                    this.value = true;
+                    self.value = true;
                     break;
                 case 'False':
-                    this.value = false;
+                    self.value = false;
                     break;
                 default:
-                    this.value = lastVal;
+                    self.value = lastVal;
             }
         }
 
-        this.resolved = true;
+        self.resolved = true;
     }
     override detach(detachedElement: HTMLLinkElement) {
         if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
     }
 
     onValChange(self: this): void {
-
         const {value, enhancedElement, prop} = self;
         if(value === undefined) return;
         if(enhancedElement instanceof HTMLMetaElement){
@@ -140,7 +148,8 @@ const xe = new XE<AP, Actions>({
         actions: {
             onValChange: {
                 ifKeyIn: ['value'],
-            }
+            },
+            hydrate: 'prop'
         }
     },
     superclass: BeIt

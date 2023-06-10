@@ -30,31 +30,39 @@ export class BeIt extends BE {
         }
         return null;
     }
-    #ignoreValChange = false;
+    #skipParsingAttrChange = false;
     get #attr() {
         return this.enhancedElement.localName === 'link' ? 'href' : 'content';
     }
-    async attach(enhancedElement, enhancementInfo) {
-        await super.attach(enhancedElement, enhancementInfo);
+    hydrate(self) {
+        const { enhancedElement } = self;
         const mutOptions = {
-            attributeFilter: [this.#attr],
+            attributeFilter: [self.#attr],
             attributes: true
         };
-        this.#mutationObserver = new MutationObserver(() => {
-            if (this.#ignoreValChange) {
-                this.#ignoreValChange = false;
+        self.#mutationObserver = new MutationObserver(() => {
+            if (self.#skipParsingAttrChange) {
+                self.#skipParsingAttrChange = false;
                 return;
             }
-            this.calcVal();
+            self.calcVal(self);
         });
-        this.#mutationObserver.observe(enhancedElement, mutOptions);
-        this.calcVal();
+        self.#mutationObserver.observe(enhancedElement, mutOptions);
+        self.calcVal(self);
     }
-    calcVal() {
-        const { enhancedElement } = this;
+    calcVal(self) {
+        const { enhancedElement, prop } = self;
         if (!enhancedElement.hasAttribute(this.#attr)) {
-            this.value = undefined;
-            this.resolved = true;
+            //see if target element has a value
+            const target = this.#target;
+            if (target !== null) {
+                this.#skipParsingAttrChange = true;
+                self.value = target[prop];
+            }
+            else {
+                self.value = undefined;
+            }
+            self.resolved = true;
             return;
         }
         if (enhancedElement instanceof HTMLMetaElement) {
@@ -62,32 +70,32 @@ export class BeIt extends BE {
             const content = enhancedElement.content;
             switch (type) {
                 case 'https://schema.org/Number':
-                    this.value = Number(content);
+                    self.value = Number(content);
                     break;
                 case 'https://schema.org/Integer':
-                    this.value = parseInt(content);
+                    self.value = parseInt(content);
                     break;
                 case 'https://schema.org/Float':
-                    this.value = parseFloat(content);
+                    self.value = parseFloat(content);
                     break;
             }
         }
         else {
             const split = (enhancedElement.href).split('/');
             const lastVal = split.at(-1);
-            this.#ignoreValChange = true;
+            self.#skipParsingAttrChange = true;
             switch (lastVal) {
                 case 'True':
-                    this.value = true;
+                    self.value = true;
                     break;
                 case 'False':
-                    this.value = false;
+                    self.value = false;
                     break;
                 default:
-                    this.value = lastVal;
+                    self.value = lastVal;
             }
         }
-        this.resolved = true;
+        self.resolved = true;
     }
     detach(detachedElement) {
         if (this.#mutationObserver !== undefined)
@@ -133,7 +141,8 @@ const xe = new XE({
         actions: {
             onValChange: {
                 ifKeyIn: ['value'],
-            }
+            },
+            hydrate: 'prop'
         }
     },
     superclass: BeIt

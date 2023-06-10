@@ -21,5 +21,5 @@ export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>];
 
 export interface Actions{
     onValChange(self: this): void;
-    
+    hydrate(self: this): void;
 }
