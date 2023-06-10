@@ -41,6 +41,10 @@ export class BeIt extends BE {
             attributes: true
         };
         this.#mutationObserver = new MutationObserver(() => {
+            if (this.#ignoreValChange) {
+                this.#ignoreValChange = false;
+                return;
+            }
             this.calcVal();
         });
         this.#mutationObserver.observe(enhancedElement, mutOptions);
@@ -90,10 +94,6 @@ export class BeIt extends BE {
             this.#mutationObserver.disconnect();
     }
     onValChange(self) {
-        if (this.#ignoreValChange) {
-            this.#ignoreValChange = false;
-            return;
-        }
         const { value, enhancedElement, prop } = self;
         if (value === undefined)
             return;
