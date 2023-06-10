@@ -44,6 +44,10 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             attributes: true
         };
         this.#mutationObserver = new MutationObserver(() => {
+            if(this.#ignoreValChange){
+                this.#ignoreValChange = false;
+                return;
+            }
             this.calcVal();
         });
         this.#mutationObserver.observe(enhancedElement, mutOptions);
@@ -95,10 +99,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
     }
 
     onValChange(self: this): void {
-        if(this.#ignoreValChange){
-            this.#ignoreValChange = false;
-            return;
-        }
+
         const {value, enhancedElement, prop} = self;
         if(value === undefined) return;
         if(enhancedElement instanceof HTMLMetaElement){
