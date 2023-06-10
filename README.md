@@ -4,6 +4,11 @@ be-it is a vaguely named custom enhancement for DOM elements, whose mission is r
 
 This allows applications to hydrate without having to pass and parse data separately, and provide search engines with accurate information.
 
+[![Playwright Tests](https://github.com/bahrus/be-it/actions/workflows/CI.yml/badge.svg)](https://github.com/bahrus/be-it/actions/workflows/CI.yml)
+[![NPM version](https://badge.fury.io/js/be-it.png)](http://badge.fury.io/js/be-it)
+[![How big is this package in your project?](https://img.shields.io/bundlephobia/minzip/be-it?style=for-the-badge)](https://bundlephobia.com/result?p=be-it)
+<img src="http://img.badgesize.io/https://cdn.jsdelivr.net/npm/be-it?compression=gzip">
+
 It works well with other custom enhancements, including [be-sharing](https://github.com/bahrus/be-sharing) and [be-linked](https://github.com/bahrus/be-linked):
 
 ```html
@@ -34,6 +39,22 @@ It works well with other custom enhancements, including [be-sharing](https://git
 ```
 
 ...updates the microdata so it matches the initial values of the input element.
+
+## Viewing Your Element Locally
+
+1.  Install git.
+2.  Fork/clone this repo.
+3.  Install node.h
+4.  Open command window to folder where you cloned this repo.
+5.  > npm install
+6.  > npm run serve
+7.  Open http://localhost:3030/demo/ in a modern browser.
+
+## Running Tests
+
+```
+> npm run test
+```
 
 
 
