@@ -1,6 +1,6 @@
 # be-it
 
-be-it is a vaguely named custom enhancement for DOM elements, whose mission is rather obscure but quite important.  It allows forwarding microdata settings / values from meta and link tags to properties of other DOM (custom) elements.
+be-it is a vaguely named custom enhancement for DOM elements, whose mission is rather obscure but quite important.  It allows deriving and forwarding microdata settings / values from meta and link tags to and from properties of other DOM (custom) elements.
 
 This allows applications to hydrate without having to pass and parse data separately, and provide search engines with accurate information.
 
