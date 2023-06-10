@@ -25,3 +25,15 @@ It works well with other custom enhancements, including [be-sharing](https://git
 </div>
 ```
 
+*be-it* also supports hydrating the value in the opposite direction:
+
+```html
+<link be-it=disabled>
+<meta itemtype="https://schema.org/Number" be-it=maxLength>
+<input disabled maxlength=37>
+```
+
+...updates the microdata so it matches the initial values of the input element.
+
+
+
