@@ -3,11 +3,13 @@ import {IBE, Declarations} from 'be-enhanced/types';
 
 export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
     prop: string;
+    
 }
 
 
 export interface AllProps extends EndUserProps{
     value?: string | boolean | number;
+    isC: boolean;
     //ignoreValChange: boolean;
 }
 
