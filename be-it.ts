@@ -136,6 +136,7 @@ const xe = new XE<AP, Actions>({
         propDefaults: {
             ...propDefaults,
             prop: '',
+            isC: true,
         },
         propInfo: {
             ...propInfo,
@@ -149,7 +150,7 @@ const xe = new XE<AP, Actions>({
             onValChange: {
                 ifKeyIn: ['value'],
             },
-            hydrate: 'prop'
+            hydrate: 'isC'
         }
     },
     superclass: BeIt
