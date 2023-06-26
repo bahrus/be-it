@@ -78,6 +78,8 @@ export class BeIt extends BE {
                 case 'https://schema.org/Float':
                     self.value = parseFloat(content);
                     break;
+                default:
+                    self.value = content;
             }
         }
         else {

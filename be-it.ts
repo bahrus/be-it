@@ -83,7 +83,8 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                 case 'https://schema.org/Float':
                     self.value = parseFloat(content);
                     break;
-
+                default:
+                    self.value = content;
             }
         }else{
             const split = (enhancedElement.href).split('/');
