@@ -10,6 +10,9 @@ export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
 export interface AllProps extends EndUserProps{
     value?: string | boolean | number;
     isC: boolean;
+    hostTarget?: WeakRef<EventTarget>
+    hostProp?: string;
+    childProp?: string;
     //ignoreValChange: boolean;
 }
 
