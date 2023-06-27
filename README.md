@@ -40,6 +40,17 @@ It works well with other custom enhancements, including [be-sharing](https://git
 
 ...updates the microdata so it matches the initial values of the input element.
 
+## Two-way binding [TODO]
+
+be-it will support a two way binding option if the name of the property to share ends with a ^ character.
+
+```html
+<link itemprop isHappy be-it=checked^>
+<input type=checkbox>
+```
+
+This will cause the checkbox to notify the source's isHappy property of the change
+
 ## Viewing Your Element Locally
 
 1.  Install git.
