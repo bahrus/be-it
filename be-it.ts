@@ -102,6 +102,8 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             }
         }
 
+        
+
         self.resolved = true;
     }
     override detach(detachedElement: HTMLLinkElement) {
@@ -123,6 +125,21 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             if(target !== null) (<any>target)[prop] = value;
         }
     }
+
+    onProp(self: this): PAP {
+        const {prop} = self;
+        const split = prop.split('🔃');
+        if(split.length === 2){
+            return {
+                prop: split[0],
+                hostProp: split[1],
+                isTwoWay: true,
+            }
+        }else{
+            return {}
+        }
+        
+    }
 }
 
 export interface BeIt extends AllProps{}
@@ -137,7 +154,10 @@ const xe = new XE<AP, Actions>({
         propDefaults: {
             ...propDefaults,
             prop: '',
+            hostProp: '',
             isC: true,
+            hostTarget: 'hostish',
+            isTwoWay: false,
         },
         propInfo: {
             ...propInfo,
