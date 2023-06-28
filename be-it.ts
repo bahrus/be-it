@@ -136,7 +136,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
 
     onProp(self: this): PAP {
         const {prop} = self;
-        const split = prop.split('🔃');
+        const split = prop.split('^');
         if(split.length === 2){
             return {
                 prop: split[0],

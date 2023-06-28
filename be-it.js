@@ -132,7 +132,7 @@ export class BeIt extends BE {
     }
     onProp(self) {
         const { prop } = self;
-        const split = prop.split('🔃');
+        const split = prop.split('^');
         if (split.length === 2) {
             return {
                 prop: split[0],
