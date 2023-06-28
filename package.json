@@ -25,6 +25,7 @@
     "safari": "npx playwright wk http://localhost:3030"
   },
   "dependencies": {
+    "be-bound": "0.0.10",
     "be-enhanced": "0.0.33",
     "be-hive": "0.0.110",
     "trans-render": "0.0.693",

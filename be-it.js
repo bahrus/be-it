@@ -34,13 +34,23 @@ export class BeIt extends BE {
     get #attr() {
         return this.enhancedElement.localName === 'link' ? 'href' : 'content';
     }
-    hydrate(self) {
-        const { enhancedElement } = self;
+    async hydrate(self) {
+        const { enhancedElement, isTwoWay } = self;
+        if (isTwoWay) {
+            const target = this.#target;
+            if (target === null)
+                throw 404;
+            const { doTwoWay } = await import('./doTwoWay.js');
+            doTwoWay(self, target);
+            return;
+        }
         const mutOptions = {
             attributeFilter: [self.#attr],
             attributes: true
         };
-        self.#mutationObserver = new MutationObserver(() => {
+        self.#mutationObserver = new MutationObserver(( /*mutations: MutationRecord[]*/) => {
+            //const [mutation] = mutations;
+            //if(mutation.oldValue === self.getAttribute(this.#attr)) return;
             if (self.#skipParsingAttrChange) {
                 self.#skipParsingAttrChange = false;
                 return;
@@ -104,7 +114,7 @@ export class BeIt extends BE {
             this.#mutationObserver.disconnect();
     }
     onValChange(self) {
-        const { value, enhancedElement, prop } = self;
+        const { value, enhancedElement, prop, isTwoWay } = self;
         if (value === undefined)
             return;
         if (enhancedElement instanceof HTMLMetaElement) {
@@ -115,10 +125,24 @@ export class BeIt extends BE {
                 value === false ? 'False' : value;
             enhancedElement.href = 'https://schema.org/' + urlVal;
         }
-        if (prop) {
+        if (prop && !isTwoWay) {
             const target = this.#target;
             if (target !== null)
                 target[prop] = value;
+        }
+    }
+    onProp(self) {
+        const { prop } = self;
+        const split = prop.split('🔃');
+        if (split.length === 2) {
+            return {
+                prop: split[0],
+                hostProp: split[1],
+                isTwoWay: true,
+            };
+        }
+        else {
+            return {};
         }
     }
 }
@@ -131,7 +155,10 @@ const xe = new XE({
         propDefaults: {
             ...propDefaults,
             prop: '',
+            hostProp: '',
             isC: true,
+            hostTarget: 'hostish',
+            isTwoWay: false,
         },
         propInfo: {
             ...propInfo,

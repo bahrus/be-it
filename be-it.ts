@@ -38,13 +38,22 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         return this.enhancedElement.localName === 'link' ? 'href' : 'content';
     }
 
-    hydrate(self: this) {
-        const {enhancedElement} = self;
+    async hydrate(self: this) {
+        const {enhancedElement, isTwoWay} = self;
+        if(isTwoWay){
+            const target = this.#target;
+            if(target === null) throw 404;
+            const {doTwoWay} = await import('./doTwoWay.js');
+            doTwoWay(self, target);
+            return;
+        }
         const mutOptions: MutationObserverInit = {
             attributeFilter: [self.#attr],
             attributes: true
         };
-        self.#mutationObserver = new MutationObserver(() => {
+        self.#mutationObserver = new MutationObserver((/*mutations: MutationRecord[]*/) => {
+            //const [mutation] = mutations;
+            //if(mutation.oldValue === self.getAttribute(this.#attr)) return;
             if(self.#skipParsingAttrChange){
                 self.#skipParsingAttrChange = false;
                 return;
@@ -111,7 +120,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
     }
 
     onValChange(self: this): void {
-        const {value, enhancedElement, prop} = self;
+        const {value, enhancedElement, prop, isTwoWay} = self;
         if(value === undefined) return;
         if(enhancedElement instanceof HTMLMetaElement){
             enhancedElement.content = value.toString();
@@ -120,7 +129,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             value === false ? 'False' : value;
             enhancedElement.href = 'https://schema.org/' + urlVal;
         }
-        if(prop){
+        if(prop && !isTwoWay){
             const target = this.#target;
             if(target !== null) (<any>target)[prop] = value;
         }
