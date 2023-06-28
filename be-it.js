@@ -42,7 +42,6 @@ export class BeIt extends BE {
                 throw 404;
             const { doTwoWay } = await import('./doTwoWay.js');
             doTwoWay(self, target);
-            return;
         }
         const mutOptions = {
             attributeFilter: [self.#attr],
@@ -61,8 +60,8 @@ export class BeIt extends BE {
         self.calcVal(self);
     }
     calcVal(self) {
-        const { enhancedElement, prop } = self;
-        if (!enhancedElement.hasAttribute(this.#attr)) {
+        const { enhancedElement, prop, isTwoWay } = self;
+        if (!isTwoWay && !enhancedElement.hasAttribute(this.#attr)) {
             //see if target element has a value
             const target = this.#target;
             if (target !== null) {
@@ -159,6 +158,7 @@ const xe = new XE({
             isC: true,
             hostTarget: 'hostish',
             isTwoWay: false,
+            transformScope: 'parent'
         },
         propInfo: {
             ...propInfo,
@@ -172,7 +172,8 @@ const xe = new XE({
             onValChange: {
                 ifKeyIn: ['value'],
             },
-            hydrate: 'isC'
+            hydrate: 'isC',
+            onProp: 'prop',
         }
     },
     superclass: BeIt

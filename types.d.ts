@@ -17,7 +17,7 @@ export interface AllProps extends EndUserProps{
     transform?: Matches;
     transformWhenTruthy?: Matches;
     transformWhenFalsy?: Matches;
-    transformScope?: 
+    transformScope?: Scope;
 }
 
 export type AP = AllProps;
