@@ -1,6 +1,6 @@
 import { ActionOnEventConfigs } from "trans-render/froop/types";
 import {IBE, Declarations} from 'be-enhanced/types';
-import {Target, Matches} from 'trans-render/lib/types';
+import {Target, Matches, Scope} from 'trans-render/lib/types';
 
 export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
     prop: string;
@@ -14,7 +14,10 @@ export interface AllProps extends EndUserProps{
     value?: string | boolean | number;
     isC: boolean;
     hostRef?: WeakRef<EventTarget>;
-    disseminate?: Matches
+    transform?: Matches;
+    transformWhenTruthy?: Matches;
+    transformWhenFalsy?: Matches;
+    transformScope?: 
 }
 
 export type AP = AllProps;

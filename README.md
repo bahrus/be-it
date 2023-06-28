@@ -1,6 +1,6 @@
 # be-it
 
-be-it is a vaguely named custom enhancement for DOM elements, whose mission is rather obscure but quite important.  It allows deriving and forwarding microdata settings / values from meta and link tags to and from properties of other DOM (custom) elements.
+be-it is a vaguely named custom enhancement for DOM elements, whose mission is rather obscure but quite important.  It allows deriving and forwarding microdata settings / values from meta and link tags to and from properties of other DOM (custom) elements.  "it" stands for "itemized and transformed", if that helps remember the name.
 
 This allows applications to hydrate without having to pass and parse data separately, and provide search engines with accurate information.
 
@@ -40,16 +40,34 @@ It works well with other custom enhancements, including [be-sharing](https://git
 
 ...updates the microdata so it matches the initial values of the input element.
 
-## Two-way binding [TODO]
+## Two-way binding [WIP]
 
-be-it will support a two way binding option if the name of the property to share ends with a ^ character.
+be-it supports a two way binding option if the name of the property to share ends with a 🔃 character.
 
 ```html
 <link itemprop isHappy be-it=checked🔃>
 <input type=checkbox>
 ```
 
-This will cause the checkbox to notify the source's isHappy property of the change
+This will cause the checkbox to notify the source's isHappy property of the change.
+
+## Transforming peer elements [TODO]
+
+be-it can also disseminate its value to other peer elements within the Shadow DOM realm, using [DTR syntax](https://github.com/bahrus/trans-render#declarative-trans-render-syntax-via-json-serializable-rhs-expressions-with-libdtrjs):
+
+```html
+<span><span>
+<link itemprop isHappy be-it='{
+    "prop": "checked",
+    "twoWay": true,
+    "transform": {
+        "span": "."
+    }
+}'>
+<input type=checkbox>
+```
+
+If different values should be passed based on whether the value of itemprop is truthy or falsy, use the transformIfTruty, transformIfFalsy properties.
 
 ## Viewing Your Element Locally
 
