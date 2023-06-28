@@ -141,7 +141,9 @@ export class BeIt extends BE {
             };
         }
         else {
-            return {};
+            return {
+                isC: true
+            };
         }
     }
 }
@@ -155,7 +157,7 @@ const xe = new XE({
             ...propDefaults,
             prop: '',
             hostProp: '',
-            isC: true,
+            isC: false,
             hostTarget: 'hostish',
             isTwoWay: false,
             transformScope: 'parent'
@@ -173,7 +175,9 @@ const xe = new XE({
                 ifKeyIn: ['value'],
             },
             hydrate: 'isC',
-            onProp: 'prop',
+            onProp: {
+                ifKeyIn: ['prop']
+            }
         }
     },
     superclass: BeIt

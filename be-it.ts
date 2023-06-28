@@ -144,7 +144,9 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                 isTwoWay: true,
             }
         }else{
-            return {}
+            return {
+                isC: true
+            }
         }
         
     }
@@ -163,7 +165,7 @@ const xe = new XE<AP, Actions>({
             ...propDefaults,
             prop: '',
             hostProp: '',
-            isC: true,
+            isC: false,
             hostTarget: 'hostish',
             isTwoWay: false,
             transformScope: 'parent'
@@ -181,7 +183,9 @@ const xe = new XE<AP, Actions>({
                 ifKeyIn: ['value'],
             },
             hydrate: 'isC',
-            onProp: 'prop',
+            onProp: {
+                ifKeyIn: ['prop']
+            }
         }
     },
     superclass: BeIt
