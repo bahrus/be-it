@@ -45,7 +45,7 @@ It works well with other custom enhancements, including [be-sharing](https://git
 be-it supports a two way binding option if the name of the property to share ends with a ^ character.
 
 ```html
-<link itemprop isHappy be-it=checked^>
+<link itemprop isHappy be-it=checked🔃>
 <input type=checkbox>
 ```
 
