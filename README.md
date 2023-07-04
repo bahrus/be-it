@@ -51,7 +51,7 @@ be-it supports a two way binding option if the name of the property to share end
 
 This will cause the checkbox to notify the source's isHappy property of the change.
 
-## Conditionally displaying a template element [TODO]
+## Conditionally displaying a template element
 
 ```html
 <link itemprop=isHappy be-it=content-display>
