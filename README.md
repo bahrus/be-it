@@ -30,7 +30,7 @@ It works well with other custom enhancements, including [be-sharing](https://git
 </div>
 ```
 
-*be-it* also supports hydrating the value in the opposite direction:
+*be-it* also supports hydrating the value in the opposite direction from server rendered HTML:
 
 ```html
 <link be-it=disabled>
@@ -42,14 +42,23 @@ It works well with other custom enhancements, including [be-sharing](https://git
 
 ## Two-way binding
 
-be-it supports a two way binding option if the name of the property to share ends with a ^ character.
+be-it supports a two way binding option if the name of the property to share ends with a 🔃 character. (On windows, type flying windows button, then the period, and search for clockwise vertical arrow.)
 
 ```html
-<link itemprop isHappy be-it=checked🔃>
+<link itemprop=isHappy be-it=checked🔃>
 <input type=checkbox>
 ```
 
 This will cause the checkbox to notify the source's isHappy property of the change.
+
+## Conditionally displaying a template element [TODO]
+
+```html
+<link itemprop=isHappy be-it=content-display>
+<template>
+    <my-content></my-content>
+</template>
+```
 
 ## Transforming peer elements [TODO]
 
@@ -57,7 +66,7 @@ be-it can also disseminate its value to other peer elements within the Shadow DO
 
 ```html
 <span><span>
-<link itemprop isHappy be-it='{
+<link itemprop=isHappy be-it='{
     "prop": "checked",
     "twoWay": true,
     "transform": {
@@ -68,6 +77,8 @@ be-it can also disseminate its value to other peer elements within the Shadow DO
 ```
 
 If different values should be passed based on whether the value of itemprop is truthy or falsy, use the transformIfTruty, transformIfFalsy properties.
+
+
 
 ## Viewing Your Element Locally
 
