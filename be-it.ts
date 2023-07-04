@@ -112,15 +112,15 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
 
         
 
-        self.resolved = true;
+        
     }
     override detach(detachedElement: HTMLLinkElement) {
         if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
     }
 
-    onValChange(self: this): void {
+    async onValChange(self: this): ProPAP{
         const {value, enhancedElement, prop, isTwoWay} = self;
-        if(value === undefined) return;
+        if(value === undefined) return {};
         if(enhancedElement instanceof HTMLMetaElement){
             enhancedElement.content = value.toString();
         }else{
@@ -130,7 +130,18 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         }
         if(prop && !isTwoWay){
             const target = this.#target;
-            if(target !== null) (<any>target)[prop] = value;
+            if(target !== null){
+                if(target instanceof HTMLTemplateElement && prop === 'content-display'){
+                    const {doCD} = await import('./doCD.js');
+                    doCD(target, value);
+                }else{
+                    (<any>target)[prop] = value;
+                } 
+            }
+            
+        }
+        return {
+            resolved: true
         }
     }
 

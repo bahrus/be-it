@@ -29,7 +29,7 @@ export type ProPAP = Promise<PAP>;
 export type POA = [PAP | undefined, ActionOnEventConfigs<PAP, Actions>];
 
 export interface Actions{
-    onValChange(self: this): void;
+    onValChange(self: this): ProPAP;
     hydrate(self: this): void;
     onProp(self: this): PAP;
 }

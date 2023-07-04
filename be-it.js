@@ -106,16 +106,15 @@ export class BeIt extends BE {
                     self.value = lastVal;
             }
         }
-        self.resolved = true;
     }
     detach(detachedElement) {
         if (this.#mutationObserver !== undefined)
             this.#mutationObserver.disconnect();
     }
-    onValChange(self) {
+    async onValChange(self) {
         const { value, enhancedElement, prop, isTwoWay } = self;
         if (value === undefined)
-            return;
+            return {};
         if (enhancedElement instanceof HTMLMetaElement) {
             enhancedElement.content = value.toString();
         }
@@ -126,9 +125,19 @@ export class BeIt extends BE {
         }
         if (prop && !isTwoWay) {
             const target = this.#target;
-            if (target !== null)
-                target[prop] = value;
+            if (target !== null) {
+                if (target instanceof HTMLTemplateElement && prop === 'content-display') {
+                    const { doCD } = await import('./doCD.js');
+                    doCD(target, value);
+                }
+                else {
+                    target[prop] = value;
+                }
+            }
         }
+        return {
+            resolved: true
+        };
     }
     onProp(self) {
         const { prop } = self;
