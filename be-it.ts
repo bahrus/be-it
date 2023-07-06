@@ -120,7 +120,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
 
     async onValChange(self: this): ProPAP{
         const {value, enhancedElement, prop, isTwoWay} = self;
-        if(value === undefined) return {};
+        if(value === undefined || value === null) return {};
         if(enhancedElement instanceof HTMLMetaElement){
             enhancedElement.content = value.toString();
         }else{

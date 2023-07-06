@@ -113,7 +113,7 @@ export class BeIt extends BE {
     }
     async onValChange(self) {
         const { value, enhancedElement, prop, isTwoWay } = self;
-        if (value === undefined)
+        if (value === undefined || value === null)
             return {};
         if (enhancedElement instanceof HTMLMetaElement) {
             enhancedElement.content = value.toString();
