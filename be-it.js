@@ -16,16 +16,16 @@ export class BeIt extends BE {
             if (deref !== undefined)
                 return deref;
         }
-        const { enhancedElement } = this;
-        let { nextElementSibling } = enhancedElement;
-        while (nextElementSibling !== null) {
-            const { localName } = nextElementSibling;
+        const { enhancedElement, domNav } = this;
+        let peer = enhancedElement[domNav];
+        while (peer !== null) {
+            const { localName } = peer;
             if (localName === 'meta' || localName === 'link') {
-                nextElementSibling = nextElementSibling.nextElementSibling;
+                peer = peer[domNav];
             }
             else {
-                this.#targetEl = new WeakRef(nextElementSibling);
-                return nextElementSibling;
+                this.#targetEl = new WeakRef(peer);
+                return peer;
             }
         }
         return null;
@@ -136,7 +136,13 @@ export class BeIt extends BE {
                     if (translateBy !== undefined) {
                         newVal = Number(newVal) + translateBy;
                     }
-                    target[prop] = newVal;
+                    if (prop[0] === '.') {
+                        const { setProp } = await import('trans-render/lib/setProp.js');
+                        setProp(target, prop, newVal);
+                    }
+                    else {
+                        target[prop] = newVal;
+                    }
                 }
             }
         }
@@ -175,6 +181,7 @@ const xe = new XE({
             hostTarget: 'hostish',
             isTwoWay: false,
             transformScope: 'parent',
+            domNav: 'nextElementSibling'
         },
         propInfo: {
             ...propInfo,

@@ -12,6 +12,7 @@ export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
     transformWhenTruthy?: Matches; //TODO
     transformWhenFalsy?: Matches; //TODO
     transformScope?: Scope; //TODO
+    domNav?: 'nextElementSibling' | 'parentElement' | 'previousElementSibling';
 }
 
 

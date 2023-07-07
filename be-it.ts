@@ -19,15 +19,15 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             const deref = this.#targetEl.deref();
             if(deref !== undefined) return deref;
         }
-        const {enhancedElement} = this;
-        let {nextElementSibling} = enhancedElement;
-        while(nextElementSibling !== null){
-            const {localName} = nextElementSibling;
+        const {enhancedElement, domNav} = this;
+        let peer = enhancedElement[domNav!];
+        while(peer !== null){
+            const {localName} = peer;
             if(localName === 'meta' || localName === 'link'){
-                nextElementSibling = nextElementSibling.nextElementSibling;
+                peer = peer[domNav!];
             }else{
-                this.#targetEl = new WeakRef(nextElementSibling);
-                return nextElementSibling;
+                this.#targetEl = new WeakRef(peer);
+                return peer;
             }
         }
         return null;
@@ -140,7 +140,13 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                     if(translateBy !== undefined){
                         newVal = Number(newVal) + translateBy;
                     }
-                    (<any>target)[prop] = newVal;
+                    if(prop[0] === '.'){
+                        const {setProp} = await import('trans-render/lib/setProp.js');
+                        setProp(target, prop, newVal);
+                    }else{
+                        (<any>target)[prop] = newVal;
+                    }
+                    
                 } 
             }
             
@@ -185,6 +191,7 @@ const xe = new XE<AP, Actions>({
             hostTarget: 'hostish',
             isTwoWay: false,
             transformScope: 'parent',
+            domNav: 'nextElementSibling'
         },
         propInfo: {
             ...propInfo,
