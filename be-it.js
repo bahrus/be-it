@@ -16,12 +16,12 @@ export class BeIt extends BE {
             if (deref !== undefined)
                 return deref;
         }
-        const { enhancedElement, domNav } = this;
-        let peer = enhancedElement[domNav];
+        const { enhancedElement, targetRel } = this;
+        let peer = enhancedElement[targetRel];
         while (peer !== null) {
             const { localName } = peer;
             if (localName === 'meta' || localName === 'link') {
-                peer = peer[domNav];
+                peer = peer[targetRel];
             }
             else {
                 this.#targetEl = new WeakRef(peer);
@@ -181,7 +181,7 @@ const xe = new XE({
             hostTarget: 'hostish',
             isTwoWay: false,
             transformScope: 'parent',
-            domNav: 'nextElementSibling'
+            targetRel: 'nextElementSibling'
         },
         propInfo: {
             ...propInfo,
