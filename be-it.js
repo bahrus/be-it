@@ -131,7 +131,12 @@ export class BeIt extends BE {
                     doCD(target, value);
                 }
                 else {
-                    target[prop] = value;
+                    const { translateBy } = self;
+                    let newVal = value;
+                    if (translateBy !== undefined) {
+                        newVal = Number(newVal) + translateBy;
+                    }
+                    target[prop] = newVal;
                 }
             }
         }
@@ -169,7 +174,7 @@ const xe = new XE({
             isC: false,
             hostTarget: 'hostish',
             isTwoWay: false,
-            transformScope: 'parent'
+            transformScope: 'parent',
         },
         propInfo: {
             ...propInfo,
@@ -177,6 +182,9 @@ const xe = new XE({
                 notify: {
                     dispatch: true,
                 }
+            },
+            translateBy: {
+                type: 'Number'
             }
         },
         actions: {

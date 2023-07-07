@@ -135,7 +135,12 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                     const {doCD} = await import('./doCD.js');
                     doCD(target, value);
                 }else{
-                    (<any>target)[prop] = value;
+                    const {translateBy} = self;
+                    let newVal = value;
+                    if(translateBy !== undefined){
+                        newVal = Number(newVal) + translateBy;
+                    }
+                    (<any>target)[prop] = newVal;
                 } 
             }
             
@@ -179,7 +184,7 @@ const xe = new XE<AP, Actions>({
             isC: false,
             hostTarget: 'hostish',
             isTwoWay: false,
-            transformScope: 'parent'
+            transformScope: 'parent',
         },
         propInfo: {
             ...propInfo,
@@ -187,6 +192,9 @@ const xe = new XE<AP, Actions>({
                 notify:{
                     dispatch: true,
                 }
+            },
+            translateBy:{
+                type: 'Number'
             }
         },
         actions: {

@@ -7,6 +7,11 @@ export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
     isTwoWay?: boolean;
     hostTarget?: Target;
     hostProp?: string;
+    translateBy?: number;
+    transform?: Matches; //TODO
+    transformWhenTruthy?: Matches; //TODO
+    transformWhenFalsy?: Matches; //TODO
+    transformScope?: Scope; //TODO
 }
 
 
@@ -14,10 +19,7 @@ export interface AllProps extends EndUserProps{
     value?: string | boolean | number;
     isC: boolean;
     hostRef?: WeakRef<EventTarget>;
-    transform?: Matches;
-    transformWhenTruthy?: Matches;
-    transformWhenFalsy?: Matches;
-    transformScope?: Scope;
+
 }
 
 export type AP = AllProps;
