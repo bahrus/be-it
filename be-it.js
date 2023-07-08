@@ -21,7 +21,7 @@ export class BeIt extends BE {
         while (peer !== null) {
             const { localName } = peer;
             if (localName === 'meta' || localName === 'link') {
-                peer = peer[targetRel];
+                peer = peer[targetRel || 'nextElementSibling'];
             }
             else {
                 this.#targetEl = new WeakRef(peer);
@@ -36,6 +36,7 @@ export class BeIt extends BE {
     }
     async hydrate(self) {
         const { enhancedElement, isTwoWay } = self;
+        //if(enhancedElement.classList.contains('ignore')) return;
         if (isTwoWay) {
             const target = this.#target;
             if (target === null)
@@ -113,6 +114,7 @@ export class BeIt extends BE {
     }
     async onValChange(self) {
         const { value, enhancedElement, prop, isTwoWay } = self;
+        //if(enhancedElement.classList.contains('ignore')) return {resolved: true};
         if (value === undefined || value === null)
             return {};
         if (enhancedElement instanceof HTMLMetaElement) {
@@ -175,16 +177,19 @@ const xe = new XE({
         tagName,
         propDefaults: {
             ...propDefaults,
-            prop: '',
-            hostProp: '',
-            isC: false,
+            //prop: '',
+            //hostProp: '',
+            isC: true,
             hostTarget: 'hostish',
             isTwoWay: false,
-            transformScope: 'parent',
+            //transformScope: 'parent',
             targetRel: 'nextElementSibling'
         },
         propInfo: {
             ...propInfo,
+            prop: {
+                type: 'String'
+            },
             value: {
                 notify: {
                     dispatch: true,
@@ -192,6 +197,9 @@ const xe = new XE({
             },
             translateBy: {
                 type: 'Number'
+            },
+            targetRel: {
+                type: 'String',
             }
         },
         actions: {
