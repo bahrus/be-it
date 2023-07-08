@@ -182,7 +182,7 @@ const xe = new XE({
             //prop: '',
             //hostProp: '',
             isC: true,
-            hostTarget: 'hostish',
+            //hostTarget: 'hostish',
             //isTwoWay: false,
             //transformScope: 'parent',
             //targetRel: 'nextElementSibling'
@@ -204,6 +204,9 @@ const xe = new XE({
                 type: 'Number'
             },
             targetRel: {
+                type: 'String',
+            },
+            hostTarget: {
                 type: 'String',
             }
         },
