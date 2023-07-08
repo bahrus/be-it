@@ -190,13 +190,7 @@ const xe = new XE<AP, Actions>({
         tagName,
         propDefaults: {
             ...propDefaults,
-            //prop: '',
-            //hostProp: '',
             isC: true,
-            //hostTarget: 'hostish',
-            //isTwoWay: false,
-            //transformScope: 'parent',
-            //targetRel: 'nextElementSibling'
         },
         propInfo: {
             ...propInfo,

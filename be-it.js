@@ -179,13 +179,7 @@ const xe = new XE({
         tagName,
         propDefaults: {
             ...propDefaults,
-            //prop: '',
-            //hostProp: '',
             isC: true,
-            //hostTarget: 'hostish',
-            //isTwoWay: false,
-            //transformScope: 'parent',
-            //targetRel: 'nextElementSibling'
         },
         propInfo: {
             ...propInfo,
