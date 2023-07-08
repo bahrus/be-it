@@ -17,7 +17,7 @@ export class BeIt extends BE {
                 return deref;
         }
         const { enhancedElement, targetRel } = this;
-        let peer = enhancedElement[targetRel];
+        let peer = enhancedElement[targetRel || 'nextElementSibling'];
         while (peer !== null) {
             const { localName } = peer;
             if (localName === 'meta' || localName === 'link') {
@@ -35,7 +35,7 @@ export class BeIt extends BE {
         return this.enhancedElement.localName === 'link' ? 'href' : 'content';
     }
     async hydrate(self) {
-        const { enhancedElement, isTwoWay } = self;
+        const { enhancedElement, isTwoWay, observeAttr } = self;
         //if(enhancedElement.classList.contains('ignore')) return;
         if (isTwoWay) {
             const target = this.#target;
@@ -48,16 +48,18 @@ export class BeIt extends BE {
             attributeFilter: [self.#attr],
             attributes: true
         };
-        self.#mutationObserver = new MutationObserver(( /*mutations: MutationRecord[]*/) => {
-            //const [mutation] = mutations;
-            //if(mutation.oldValue === self.getAttribute(this.#attr)) return;
-            if (self.#skipParsingAttrChange) {
-                self.#skipParsingAttrChange = false;
-                return;
-            }
-            self.calcVal(self);
-        });
-        self.#mutationObserver.observe(enhancedElement, mutOptions);
+        if (observeAttr) {
+            self.#mutationObserver = new MutationObserver(( /*mutations: MutationRecord[]*/) => {
+                //const [mutation] = mutations;
+                //if(mutation.oldValue === self.getAttribute(this.#attr)) return;
+                if (self.#skipParsingAttrChange) {
+                    self.#skipParsingAttrChange = false;
+                    return;
+                }
+                self.calcVal(self);
+            });
+            self.#mutationObserver.observe(enhancedElement, mutOptions);
+        }
         self.calcVal(self);
     }
     calcVal(self) {
@@ -181,14 +183,17 @@ const xe = new XE({
             //hostProp: '',
             isC: true,
             hostTarget: 'hostish',
-            isTwoWay: false,
+            //isTwoWay: false,
             //transformScope: 'parent',
-            targetRel: 'nextElementSibling'
+            //targetRel: 'nextElementSibling'
         },
         propInfo: {
             ...propInfo,
             prop: {
                 type: 'String'
+            },
+            isTwoWay: {
+                type: 'Boolean'
             },
             value: {
                 notify: {
