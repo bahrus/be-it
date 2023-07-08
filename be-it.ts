@@ -189,7 +189,7 @@ const xe = new XE<AP, Actions>({
     config: {
         tagName,
         propDefaults: {
-            ...propDefaults,
+            //...propDefaults,
             isC: true,
         },
         propInfo: {
@@ -213,7 +213,7 @@ const xe = new XE<AP, Actions>({
             },
             hostTarget: {
                 type: 'String',
-            }
+            },
         },
         actions: {
             onValChange: {

@@ -1,4 +1,4 @@
-import { BE, propDefaults, propInfo } from 'be-enhanced/BE.js';
+import { BE, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
 export class BeIt extends BE {
@@ -178,7 +178,7 @@ const xe = new XE({
     config: {
         tagName,
         propDefaults: {
-            ...propDefaults,
+            //...propDefaults,
             isC: true,
         },
         propInfo: {
@@ -202,7 +202,7 @@ const xe = new XE({
             },
             hostTarget: {
                 type: 'String',
-            }
+            },
         },
         actions: {
             onValChange: {
