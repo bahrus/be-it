@@ -40,6 +40,11 @@ It works well with other custom enhancements, including [be-sharing](https://git
 
 ...updates the microdata so it matches the initial values of the input element.
 
+## Deriving initial value from SSR [TODO]
+
+```html
+<link itemprop=isHappy be-it=checked🌩️>
+```
 ## Two-way binding
 
 be-it supports a two way binding option if the name of the property to share ends with a 🔃 character. (On windows, type flying windows button, then the period, and search for clockwise vertical arrow.)

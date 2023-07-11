@@ -42,7 +42,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
     }
 
     async hydrate(self: this) {
-        const {enhancedElement, isTwoWay, observeAttr} = self;
+        const {enhancedElement, isTwoWay, observeAttr, deriveFromSSR} = self;
         //if(enhancedElement.classList.contains('ignore')) return;
         if(isTwoWay){
             const target = this.#target;
@@ -50,11 +50,11 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             const {doTwoWay} = await import('./doTwoWay.js');
             doTwoWay(self, target);
         }
-        const mutOptions: MutationObserverInit = {
-            attributeFilter: [self.#attr],
-            attributes: true
-        };
         if(observeAttr){
+            const mutOptions: MutationObserverInit = {
+                attributeFilter: [self.#attr],
+                attributes: true
+            };
             self.#mutationObserver = new MutationObserver((/*mutations: MutationRecord[]*/) => {
                 //const [mutation] = mutations;
                 //if(mutation.oldValue === self.getAttribute(this.#attr)) return;
@@ -66,13 +66,17 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             });
             self.#mutationObserver.observe(enhancedElement, mutOptions);
         }
-
-        self.calcVal(self);
+        if(deriveFromSSR){
+            self.calcVal(self);
+        }else{
+            self.resolved = true;
+        }
+        
     }
 
     calcVal(self: this){
         const {enhancedElement, prop, isTwoWay} = self;
-        if(!isTwoWay && !enhancedElement.hasAttribute(this.#attr)){
+        if(prop && !isTwoWay && !enhancedElement.hasAttribute(this.#attr)){
             //see if target element has a value
             const target = this.#target;
             if(target !== null){

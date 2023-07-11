@@ -14,6 +14,7 @@ export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
     transformScope?: Scope; //TODO
     targetRel?: 'nextElementSibling' | 'parentElement' | 'previousElementSibling';
     observeAttr?: boolean;
+    deriveFromSSR?: boolean;
 }
 
 
