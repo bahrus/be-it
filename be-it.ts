@@ -75,6 +75,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
     }
 
     calcVal(self: this){
+        console.log('calcVal');
         const {enhancedElement, prop, isTwoWay} = self;
         if(prop && !isTwoWay && !enhancedElement.hasAttribute(this.#attr)){
             //see if target element has a value
@@ -169,13 +170,30 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
     }
 
     onProp(self: this): PAP {
-        const {prop} = self;
+        let {prop, deriveFromSSR, enhancedElement} = self;
+        if(prop === undefined){
+            console.log('undefined');
+            return {
+            
+            };
+        }
+        if(!deriveFromSSR){
+            //const {enh} = enhancementInfo;
+            const attr = enhancedElement.getAttribute('be-it');
+            if(attr !== null && attr.at(-1) === '🌩️'){
+                self.deriveFromSSR = true;
+                enhancedElement.setAttribute('be-it', attr.substring(0, attr.length - 1));
+                prop = prop.substring(0, prop.length - 1);
+            }
+
+        }
         const split = prop.split('🔃');
         if(split.length === 2){
             return {
                 prop: split[0],
                 hostProp: split[1],
                 isTwoWay: true,
+                isC: true,
             }
         }else{
             return {
@@ -198,7 +216,8 @@ const xe = new XE<AP, Actions>({
         isEnh: true,
         propDefaults: {
             //...propDefaults,
-            isC: true,
+            isC: false,
+            prop: '',
         },
         propInfo: {
             ...propInfo,
