@@ -3,13 +3,16 @@ import { BEConfig, EnhancementInfo } from 'be-enhanced/types';
 import { XE } from 'xtal-element/XE.js';
 import { Actions, AllProps, AP, PAP, ProPAP } from './types';
 import { register } from 'be-hive/register.js';
+import {JSONValue} from 'trans-render/lib/types';
 
+const cache = new Map<string, JSONValue>();
 export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> implements Actions{
 
     static  override get beConfig(){
         return {
             parse: true,
-            primaryProp: 'prop'
+            primaryProp: 'prop',
+            cache,
         } as BEConfig
     }
     #mutationObserver: MutationObserver | undefined;
@@ -188,6 +191,7 @@ const upgrade = 'link,meta';
 const xe = new XE<AP, Actions>({
     config: {
         tagName,
+        isEnh: true,
         propDefaults: {
             //...propDefaults,
             isC: true,

@@ -1,11 +1,13 @@
 import { BE, propInfo } from 'be-enhanced/BE.js';
 import { XE } from 'xtal-element/XE.js';
 import { register } from 'be-hive/register.js';
+const cache = new Map();
 export class BeIt extends BE {
     static get beConfig() {
         return {
             parse: true,
-            primaryProp: 'prop'
+            primaryProp: 'prop',
+            cache,
         };
     }
     #mutationObserver;
@@ -177,6 +179,7 @@ const upgrade = 'link,meta';
 const xe = new XE({
     config: {
         tagName,
+        isEnh: true,
         propDefaults: {
             //...propDefaults,
             isC: true,
