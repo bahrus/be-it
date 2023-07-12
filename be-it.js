@@ -126,6 +126,7 @@ export class BeIt extends BE {
     #skipSettingAttr = false;
     async onValChange(self) {
         const { value, enhancedElement, prop, isTwoWay } = self;
+        //console.log({value, enhancedElement, prop, isTwoWay});
         //if(enhancedElement.classList.contains('ignore')) return {resolved: true};
         if (value === undefined || value === null)
             return {};

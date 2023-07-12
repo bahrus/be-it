@@ -135,6 +135,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
     #skipSettingAttr = false;
     async onValChange(self: this): ProPAP{
         const {value, enhancedElement, prop, isTwoWay} = self;
+        //console.log({value, enhancedElement, prop, isTwoWay});
         //if(enhancedElement.classList.contains('ignore')) return {resolved: true};
         if(value === undefined || value === null) return {};
         if(!this.#skipSettingAttr){
