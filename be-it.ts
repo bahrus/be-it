@@ -75,7 +75,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
     }
 
     calcVal(self: this){
-        console.log('calcVal');
+        //console.log('calcVal');
         const {enhancedElement, prop, isTwoWay} = self;
         if(prop && !isTwoWay && !enhancedElement.hasAttribute(this.#attr)){
             //see if target element has a value
@@ -90,6 +90,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
             self.resolved = true;
             return;
         }
+        this.#skipSettingAttr = true;
         if(enhancedElement instanceof HTMLMetaElement){
             const type = enhancedElement.getAttribute('itemtype');
             const content = enhancedElement.content;
@@ -106,6 +107,7 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                 default:
                     self.value = content;
             }
+
         }else{
             const split = (enhancedElement.href).split('/');
             const lastVal = split.at(-1);
@@ -130,17 +132,21 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         if(this.#mutationObserver !== undefined) this.#mutationObserver.disconnect();
     }
 
+    #skipSettingAttr = false;
     async onValChange(self: this): ProPAP{
         const {value, enhancedElement, prop, isTwoWay} = self;
         //if(enhancedElement.classList.contains('ignore')) return {resolved: true};
         if(value === undefined || value === null) return {};
-        if(enhancedElement instanceof HTMLMetaElement){
-            enhancedElement.content = value.toString();
-        }else{
-            const urlVal = value === true ? 'True' :
-            value === false ? 'False' : value;
-            enhancedElement.href = 'https://schema.org/' + urlVal;
+        if(!this.#skipSettingAttr){
+            if(enhancedElement instanceof HTMLMetaElement){
+                enhancedElement.content = value.toString();
+            }else{
+                const urlVal = value === true ? 'True' :
+                value === false ? 'False' : value;
+                enhancedElement.href = 'https://schema.org/' + urlVal;
+            }
         }
+        this.#skipSettingAttr = false;
         if(prop && !isTwoWay){
             const target = this.#target;
             if(target !== null){
@@ -179,11 +185,16 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         }
         if(!deriveFromSSR){
             //const {enh} = enhancementInfo;
-            const attr = enhancedElement.getAttribute('be-it');
-            if(attr !== null && attr.at(-1) === '🌩️'){
+            //const attr = enhancedElement.getAttribute('be-it');
+            if(prop.endsWith('🌩️')){
                 self.deriveFromSSR = true;
-                enhancedElement.setAttribute('be-it', attr.substring(0, attr.length - 1));
-                prop = prop.substring(0, prop.length - 1);
+                const newStr = prop.substring(0, prop.length - 3);
+                if(enhancedElement.hasAttribute('be-it')){
+                    self.deriveFromSSR = true;
+                }
+                enhancedElement.setAttribute('be-it', newStr);
+                self.prop = newStr;
+                return {};
             }
 
         }
@@ -217,7 +228,7 @@ const xe = new XE<AP, Actions>({
         propDefaults: {
             //...propDefaults,
             //isC: false,
-            prop: '',
+            //prop: '',
         },
         propInfo: {
             ...propInfo,
