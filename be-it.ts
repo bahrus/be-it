@@ -216,7 +216,7 @@ const xe = new XE<AP, Actions>({
         isEnh: true,
         propDefaults: {
             //...propDefaults,
-            isC: false,
+            //isC: false,
             prop: '',
         },
         propInfo: {

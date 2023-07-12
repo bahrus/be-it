@@ -202,7 +202,7 @@ const xe = new XE({
         isEnh: true,
         propDefaults: {
             //...propDefaults,
-            isC: false,
+            //isC: false,
             prop: '',
         },
         propInfo: {
