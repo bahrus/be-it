@@ -137,7 +137,9 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         const {value, enhancedElement, prop, isTwoWay} = self;
         //console.log({value, enhancedElement, prop, isTwoWay});
         //if(enhancedElement.classList.contains('ignore')) return {resolved: true};
-        if(value === undefined || value === null) return {};
+        if(value === undefined || value === null) {
+            return {};
+        }
         if(!this.#skipSettingAttr){
             if(enhancedElement instanceof HTMLMetaElement){
                 enhancedElement.content = value.toString();
@@ -228,11 +230,14 @@ const xe = new XE<AP, Actions>({
         isEnh: true,
         propDefaults: {
             //...propDefaults,
-            //isC: false,
+            isC: true,
             //prop: '',
         },
         propInfo: {
             ...propInfo,
+            isC:{
+                dry: false
+            },
             prop: {
                 type: 'String'
             },
