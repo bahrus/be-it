@@ -198,12 +198,18 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
 
     onProp(self: this): PAP {
         let {prop, deriveFromSSR, enhancedElement} = self;
-        if(prop === undefined){
-            console.log('undefined');
-            return {
-            
-            };
+        if(prop[0] === '-'){
+            const propSplit = prop.split(';');
+            self.markers = propSplit.slice(0, propSplit.length - 1);
+            self.prop = propSplit.at(-1) || '';
+            return {};
         }
+        // if(prop === undefined){
+        //     console.log('undefined');
+        //     return {
+            
+        //     };
+        // }
         if(!deriveFromSSR){
             //const {enh} = enhancementInfo;
             //const attr = enhancedElement.getAttribute('be-it');

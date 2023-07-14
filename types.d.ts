@@ -16,6 +16,7 @@ export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
     observeAttr?: boolean;
     deriveFromSSR?: boolean;
     adjustInputType?: boolean;
+    markers?: string[];
 }
 
 
