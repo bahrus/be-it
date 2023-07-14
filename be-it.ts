@@ -161,17 +161,12 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                     let newVal = value;
                     if(translateBy !== undefined){
                         newVal = Number(newVal) + translateBy;
-                    }
-                    if(prop[0] === '.'){
-                        const {setProp} = await import('trans-render/lib/setProp.js');
-                        setProp(target, prop, newVal);
-                    }else{
-                        (<any>target)[prop] = newVal;
-                    }
-                    if(target instanceof HTMLInputElement && self.adjustInputType !== false){
+                    }                    
+                    if(prop === 'value' && target instanceof HTMLInputElement && self.adjustInputType !== false){
                         switch(typeof newVal){
                             case 'number':
                                 target.type = 'number';
+                                target.valueAsNumber = newVal;
                                 break;
                             case 'boolean':
                                 target.type = 'checkbox';
@@ -179,8 +174,19 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                                 break;
                             case 'object':
                                 target.readOnly = true;
+                                target.value = toString(newVal, 40);
+                                break;
+                        }
+                    }else{
+                        if(prop[0] === '.'){
+                            const {setProp} = await import('trans-render/lib/setProp.js');
+                            setProp(target, prop, newVal);
+                        }else{
+                            (<any>target)[prop] = newVal;
                         }
                     }
+
+
                 } 
             }
             
@@ -228,6 +234,14 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
         }
         
     }
+}
+
+function toString(obj: any, max: number){
+    let ret = JSON.stringify(obj, null, 2);
+    if(ret.length > max * 2){
+        ret = ret.substring(0, max) + '...' + ret.substring(ret.length - max);
+    }
+    return ret;
 }
 
 export interface BeIt extends AllProps{}
