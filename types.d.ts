@@ -40,3 +40,8 @@ export interface Actions{
     hydrate(self: this): void;
     onProp(self: this): PAP;
 }
+
+export interface Syndication {
+    refs: WeakRef<Element>[],
+    prop: string,
+}

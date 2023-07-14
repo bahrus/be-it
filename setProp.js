@@ -1,0 +1,45 @@
+export async function setProp(target, prop, value, self) {
+    if (target instanceof HTMLTemplateElement && prop === 'content-display') {
+        const { doCD } = await import('./doCD.js');
+        doCD(target, value);
+    }
+    else {
+        const { translateBy } = self;
+        let newVal = value;
+        if (translateBy !== undefined) {
+            newVal = Number(newVal) + translateBy;
+        }
+        if (prop === 'value' && target instanceof HTMLInputElement && self.adjustInputType !== false) {
+            switch (typeof newVal) {
+                case 'number':
+                    target.type = 'number';
+                    target.valueAsNumber = newVal;
+                    break;
+                case 'boolean':
+                    target.type = 'checkbox';
+                    target.checked = newVal;
+                    break;
+                case 'object':
+                    target.readOnly = true;
+                    target.value = toString(newVal, 40);
+                    break;
+            }
+        }
+        else {
+            if (prop[0] === '.') {
+                const { setProp } = await import('trans-render/lib/setProp.js');
+                setProp(target, prop, newVal);
+            }
+            else {
+                target[prop] = newVal;
+            }
+        }
+    }
+}
+function toString(obj, max) {
+    let ret = JSON.stringify(obj, null, 2);
+    if (ret.length > max * 2) {
+        ret = ret.substring(0, max) + '...' + ret.substring(ret.length - max);
+    }
+    return ret;
+}
