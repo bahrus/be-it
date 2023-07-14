@@ -162,6 +162,19 @@ export class BeIt extends BE {
                     else {
                         target[prop] = newVal;
                     }
+                    if (target instanceof HTMLInputElement && self.adjustInputType !== false) {
+                        switch (typeof newVal) {
+                            case 'number':
+                                target.type = 'number';
+                                break;
+                            case 'boolean':
+                                target.type = 'checkbox';
+                                target.checked = newVal;
+                                break;
+                            case 'object':
+                                target.readOnly = true;
+                        }
+                    }
                 }
             }
         }

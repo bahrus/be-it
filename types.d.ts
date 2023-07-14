@@ -15,6 +15,7 @@ export interface EndUserProps extends IBE<HTMLLinkElement | HTMLMetaElement>{
     targetRel?: 'nextElementSibling' | 'parentElement' | 'previousElementSibling';
     observeAttr?: boolean;
     deriveFromSSR?: boolean;
+    adjustInputType?: boolean;
 }
 
 

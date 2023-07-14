@@ -168,7 +168,19 @@ export class BeIt extends BE<AP, Actions, HTMLLinkElement | HTMLMetaElement> imp
                     }else{
                         (<any>target)[prop] = newVal;
                     }
-                    
+                    if(target instanceof HTMLInputElement && self.adjustInputType !== false){
+                        switch(typeof newVal){
+                            case 'number':
+                                target.type = 'number';
+                                break;
+                            case 'boolean':
+                                target.type = 'checkbox';
+                                target.checked = newVal;
+                                break;
+                            case 'object':
+                                target.readOnly = true;
+                        }
+                    }
                 } 
             }
             
@@ -273,3 +285,4 @@ const xe = new XE<AP, Actions>({
 });
 
 register(ifWantsToBe, upgrade, tagName);
+
