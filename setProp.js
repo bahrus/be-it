@@ -10,6 +10,7 @@ export async function setProp(target, prop, value, self) {
             newVal = Number(newVal) + translateBy;
         }
         if (prop === 'value' && target instanceof HTMLInputElement && self.adjustInputType !== false) {
+            target.readOnly = typeof newVal === 'object';
             switch (typeof newVal) {
                 case 'number':
                     target.type = 'number';
@@ -20,8 +21,13 @@ export async function setProp(target, prop, value, self) {
                     target.checked = newVal;
                     break;
                 case 'object':
-                    target.readOnly = true;
+                    //TODO:  date
+                    target.type = 'text';
                     target.value = toString(newVal, 40);
+                    break;
+                case 'string':
+                    target.type = 'text';
+                    target.value = newVal;
                     break;
             }
         }
